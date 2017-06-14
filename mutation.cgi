@@ -28,22 +28,19 @@ def table_inner2():
 def new_line():
     print"<br>"
 
-## protein_id_selection
+## protein_id_selection_menu
 def select_id():
     f = open('protein_id.txt','r')
     protein_id = f.read().split("\n")
     f.close
     print"""<div class='selection'>
     <p><span style="font-size:20;">Please select sequence</span>(<span style="font-size:15;">ex:TcCLB.511511.90)</span></p>
-    <form method="post" action="2Tougou.cgi">
+    <form method="post" action="mutation.cgi">
     <input type="text" list="example"name="text">
     <datalist id="example">"""
     for i in protein_id:
         print'<option value="%s"></option>'%i
-    print'</datalist>'
-    print'</select>'
-    print'</form>'
-    print"</div>"
+    print"</datalist></select></form></div>"
 
 def horizon():
     print"<hr>"
@@ -56,59 +53,21 @@ def colortozi(x,y,z):
     if y<= x <= z:
         print"</span>"
 
+
+## count位置にmutationがあれば色塗り
 def henicolorall(count,iro,iro2,heni1,heni2,heni3,heni4,heni5,heni6):
     info =""
     x = 0
-    if heni1.find(";%s;"%count)>0:
-        x += 1
-        tmp = heni1.find(";%s;"%count)
-        info += heni1[tmp-1:tmp+len("%s"%count)+3]
-        info += " "
-        tmp2=heni1.find("&")
-        tmp3=heni1.find("$")
-        info += heni1[tmp2:tmp3+1]
-    if heni2.find(";%s;"%count)>0:
-        x += 1
-        tmp = heni2.find(";%s;"%count)
-        info += heni2[tmp-1:tmp+len("%s"%count)+3]
-        info += " "
-        tmp2=heni2.find("&")
-        tmp3=heni2.find("$")
-        info += heni2[tmp2:tmp3+1]
-    if heni3.find(";%s;"%count)>0:
-        x += 1
-        tmp = heni3.find(";%s;"%count)
-        info += heni3[tmp-1:tmp+len("%s"%count)+3]
-        info += " "
-        tmp2=heni3.find("&")
-        tmp3=heni3.find("$")
-        info += heni3[tmp2:tmp3+1]
-    if heni4.find(";%s;"%count)>0:
-        x += 1
-        tmp = heni4.find(";%s;"%count)
-        info += heni4[tmp-1:tmp+len("%s"%count)+3]
-        info += " "
-        tmp2=heni4.find("&")
-        tmp3=heni4.find("$")
-        info += heni4[tmp2:tmp3+1]
-    if heni5.find(";%s;"%count)>0:
-        x += 1
-        tmp = heni5.find(";%s;"%count)
-        info += heni5[tmp-1:tmp+len("%s"%count)+3]
-        info += " "
-        tmp2=heni5.find("&")
-        tmp3=heni5.find("$")
-        info += heni5[tmp2:tmp3+1]
-    if heni6.find(";%s;"%count)>0:
-        x += 1
-        tmp = heni6.find(";%s;"%count)
-        info += heni6[tmp-1:tmp+len("%s"%count)+3]
-        info += " "
-        tmp2=heni6.find("&")
-        tmp3=heni6.find("$")
-        info += heni6[tmp2:tmp3+1]
-    info2 = info.replace(";","")
-    info2 = info2.replace("&","")
+    for i in [heni1,heni2,heni3,heni4,heni5,heni6]:
+        if i.find(";%s;"%count)>0:
+            x += 1
+            tmp = i.find(";%s;"%count)
+            info += i[tmp-1:tmp+len("%s"%count)+3]
+            info += " "
+            tmp2=i.find("&")
+            tmp3=i.find("$")
+            info += i[tmp2:tmp3+1]
+    info2 = info.replace(";","").replace("&","")
     if x == 1:
         a = count-iro+1
         print"""<span style="color:red;cursor:n-resize" title="%s" onclick="highlight(%d,%d,%d,%d);henimenu('%s','%s');"> """%(info,a,iro,iro2,x,info2,formed_id)
@@ -124,19 +83,10 @@ def henicolorall(count,iro,iro2,heni1,heni2,heni3,heni4,heni5,heni6):
     
 def henicolorendall(count,heni1,heni2,heni3,heni4,heni5,heni6):
     x = 0
-    if heni1.find(";%s;"%count)>0:
-        x += 1
-    if heni2.find(";%s;"%count)>0:
-        x += 1
-    if heni3.find(";%s;"%count)>0:
-        x += 1
-    if heni4.find(";%s;"%count)>0:
-        x += 1
-    if heni5.find(";%s;"%count)>0:
-        x += 1
-    if heni6.find(";%s;"%count)>0:
-        x += 1
-    if x >= 1:    
+    for i in [heni1,heni2,heni3,heni4,heni5,heni6]:
+        if i.find(";%s;"%count)>0:
+            x += 1
+    if x >= 1:
         print"</span>"
 
 def heniDB(strain,key):
@@ -186,6 +136,7 @@ print'<div class="core" style="overflow-y:scroll;overflow-x:hidden;">'
 print"<p><b>"
 print formed_id
 print"</b></p>"
+
 heni1 = heniDB("CLBEsmeraldo",formed_id)
 heni2 = heniDB("EsmeORF",formed_id)
 heni3 = heniDB("Sylvio",formed_id)
@@ -193,8 +144,6 @@ heni4 = heniDB("Dm28c",formed_id)
 heni5 = heniDB("JRcl",formed_id)
 heni6 = heniDB("Tulacl",formed_id)
 new_line()
-
-
 
 ## 3d structure sequence
 ## 変数宣言
@@ -210,9 +159,6 @@ if formed_id:
     #print mode_seq
     #mode_seq = "PPVYPVTVPFLGHIVQFGKNPLEFMQRCKRDLKSGVFTISIGGQRVTIVGDPHEHSRFFSPRNEILSPREVYTIMTPVFGEGVAYAAPYPRMREQLNFLAEELTIAKFQNFVPAIQHEVRKFMAENWKEDEGVINLLEDCGAMIINTACQCLFGEDLRKRLNARHFAQLLSKMESSLIPAAVFMPWLLRLPLPQSARCREARAELQKILGEIIVAREKEEASKDNNTSDLLGGLLKAVYRDGTRMSLHEVCGMIVAAMFAGQHTSTITTSWSMLHLMHPKNKKWLDKLHKEIDEFPAQLNYDNVMDEMPFAERCVRESIRRDPPLLMVMRMVKAEVKVGSYVVPKGDIIACSPLLSHHDEEAFPNPRLWDPERDEKVDGAFIGFGAGVHKCIGQKFALLQVKTILATAFREYDFQLLRDEVPDPDYHTMVVGPTLNQCLVKYTRKKKLPS"
 #formed_id = "TcCLB.509065.180"
-
-
-
 
 ## 3D structure range
 f = open('kaigyounashi.txt','r')
@@ -270,9 +216,7 @@ if formed_id:
                             colortozi(count,iro,iro2)
                             print"</td>"
                             count+=1
-        #count -= 1
         print"</tr>"
-        #count += 1
     print"</table>"
     print"</div>"
 
@@ -291,25 +235,10 @@ if "load protein3dstructures/%s.B99990001.pdb"%formed_id:
     print"jmolApplet(500, 'load protein3dstructures/%s.B99990001.pdb; cartoon only; colour whitesmoke;');"%formed_id
     for i in range(count):
         x = 0
-        if heni1.find(";%s;"%i) > 0:
-            print"jmolScript('select %d')"%(i-iro+1)
-            x += 1
-        if heni2.find(";%s;"%i) > 0:
-            print"jmolScript('select %d')"%(i-iro+1)
-            x += 1
-        if heni3.find(";%s;"%i) > 0:
-            print"jmolScript('select %d')"%(i-iro+1)
-            x += 1
-        if heni4.find(";%s;"%i) > 0:
-            print"jmolScript('select %d')"%(i-iro+1)
-            x += 1
-        if heni5.find(";%s;"%i) > 0:
-            print"jmolScript('select %d')"%(i-iro+1)
-            x += 1
-        if heni6.find(";%s;"%i) > 0:
-            print"jmolScript('select %d')"%(i-iro+1)
-            x += 1
-
+        for k in [heni1,heni2,heni3,heni4,heni5,heni6]:
+            if k.find(";%s;"%i) > 0:
+                print"jmolScript('select %d')"%(i-iro+1)
+                x += 1
         if x == 1:
             print"jmolScript('colour red')"
         if x == 2:
@@ -321,9 +250,6 @@ else:
 print"var tmp;"
 print"var color;"
 print"function highlight(t,iro,iro2,x){"
-#print'    document.write( " ")'
-#print'    document.write( iro2-iro)'
-#print'    document.write( " ")'
 print"    if(1<=t&&t<=iro2-iro){"
 print"        if (tmp!=undefined){"
 print"        jmolScript('select '+tmp);}"
@@ -342,77 +268,8 @@ print"        jmolScript('center selected'   );"
 print"        jmolScript('zoomto'   );"
 print"    }"
 print"}"
-
-#jmolApplet(300); 
 print"</script>"
 table_end()
-################## Mutation place ##################################
-"""
-if formed_id:
-    print"mutation place on the 3D structure="        
-for i in range(count):
-    if heni1.find(";%s;"%i) > 0:
-        if i-iro+1 > 0:
-            print i-iro+1
-    if heni2.find(";%s;"%i) > 0:
-        if i-iro+1 > 0:
-            print i-iro+1
-    if heni3.find(";%s;"%i) > 0:
-        if i-iro+1 > 0:
-            print i-iro+1
-    if heni4.find(";%s;"%i) > 0:
-        if i-iro+1 > 0:
-            print i-iro+1
-    if heni5.find(";%s;"%i) > 0:
-        if i-iro+1 > 0:
-            print i-iro+1
-    if heni6.find(";%s;"%i) > 0:
-        if i-iro+1 > 0:
-            print i-iro+1
-new_line()
-mu1=0
-mu2=0
-mu3=0
-mu4=0
-if formed_id:
-    print"mutation place="
-for i in range(count):
-    mu0=0
-    if heni1.find(";%s;"%i) > 0:
-        print i
-        mu0 += 1
-    if heni2.find(";%s;"%i) > 0:
-        print i
-        mu0 += 1
-    if heni3.find(";%s;"%i) > 0:
-        print i
-        mu0 += 1
-    if heni4.find(";%s;"%i) > 0:
-        print i
-        mu0 += 1
-    if heni5.find(";%s;"%i) > 0:
-        print i
-        mu0 += 1
-    if heni6.find(";%s;"%i) > 0:
-        print i
-        mu0 += 1
-    mu1 += mu0
-    if mu0 == 2:
-        print "<%s>"%i
-        mu2 += 1
-    if mu0 == 3:
-        print"<;%s;>"%i
-        mu3 += 2
-    if mu0 ==4:
-        print"<;%s;>"%i
-        mu4+=3
-
-new_line()
-
-if formed_id:
-    print"%s箇所の変異が見つかりました"%(mu1 - mu2 -mu3)
-"""
 new_line()
 new_line()
-print "</body>"
-print "</html>"
+print "</body></html>"
